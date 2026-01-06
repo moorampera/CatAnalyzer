@@ -5,14 +5,18 @@ import os
 # 1. CONFIGURACIÓN DE PÁGINA
 st.set_page_config(page_title="CatLang Analyzer", layout="wide")
 
-# --- FUNCIÓN BASE64 ---
+# --- FUNCIÓN BASE64 MEJORADA ---
 def get_base64_image(image_path):
+    # Intenta encontrar el archivo en el directorio actual
     try:
-        if os.path.exists(image_path):
-            with open(image_path, "rb") as img_file:
+        current_dir = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
+        full_path = os.path.join(current_dir, image_path)
+        
+        if os.path.exists(full_path):
+            with open(full_path, "rb") as img_file:
                 return base64.b64encode(img_file.read()).decode()
         return None
-    except Exception as e:
+    except Exception:
         return None
 
 # Carga de imagen
@@ -24,58 +28,66 @@ color_complementario = "#BCE5F9"
 
 st.markdown(f"""
     <style>
-    /* Importar fuentes de Google */
     @import url('https://fonts.googleapis.com/css2?family=Forum&family=Righteous&display=swap');
 
     .block-container {{ padding: 0rem; }}
     
-    /* SECCIÓN 1 */
+    /* SECCIÓN 1 - RESPONSIVA */
     .section-top {{
         background-color: {color_principal};
-        padding: 40px 20px 10px 20px;
+        padding: 40px 10px 10px 10px;
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }}
     
     .titulo-grande {{
-        font-family: 'Righteous', cursive; /* CAMBIO: Ahora usa Righteous para que se note la diferencia */
-        font-size: 130px !important; /* Ajustado ligeramente para mejor visibilidad */
+        font-family: 'Righteous', cursive;
+        font-size: clamp(40px, 10vw, 130px) !important; /* Ajuste automático según pantalla */
         color: #333;
         margin-bottom: 10px;
+        line-height: 1;
     }}
     
     .descripcion-centrada {{
         font-family: 'Forum', serif;
-        font-size: 18px;
+        font-size: clamp(16px, 4vw, 18px);
         color: #444;
         max-width: 500px;
         margin: 20px auto 0px auto;
         text-align: center;
         line-height: 1.3;
+        padding: 0 15px;
     }}
 
     .decoracion-curva {{
         background-color: #CFE1EA;
-        height: 45px;
-        width: 100%; /* Ajustado a 100% para evitar desbordamiento horizontal */
+        height: clamp(20px, 5vw, 45px);
+        width: 90%;
         max-width: 1300px;
         border-radius: 20px;
-        margin: 0px auto;
+        margin: 10px auto;
         display: block;
     }}
 
-    .img-transparente {{
-        display: block;
-        margin: 0 auto;
+    .img-container img {{
+        max-width: 100%;
+        height: auto;
+        width: clamp(300px, 60vw, 650px);
         background-color: transparent !important;
     }}
     
     /* SECCIÓN 2 */
     .section-bottom {{
         background-color: #FFFFFF;
-        padding: 40px 20px;
+        padding: 40px 10px;
+    }}
+
+    /* Ajuste de selectores en móvil */
+    [data-testid="stVerticalBlock"] > div {{
+        width: 100%;
     }}
 
     div[data-baseweb="select"] > div {{
@@ -85,39 +97,45 @@ st.markdown(f"""
     }}
 
     .resultado-emocion {{
-        font-size: 80px !important;
+        font-size: clamp(35px, 8vw, 80px) !important;
         font-weight: bold;
         color: #2E7D32;
         text-align: center;
     }}
 
-    /* Estilo para errores (Postura no reconocida) */
     .resultado-error {{
         font-family: 'Forum', serif;
-        font-size: 28px !important;
+        font-size: 22px !important;
         color: #888;
         text-align: center;
-        font-weight: normal;
         margin-top: 20px;
     }}
 
     .automata-box {{
         background-color: #f8f9fa;
-        padding: 20px;
+        padding: 15px;
         border-radius: 15px;
         border: 2px dashed {color_complementario};
         font-family: 'Courier New', monospace;
         text-align: center;
         margin: 20px auto;
-        max-width: 80%;
+        max-width: 90%;
+        font-size: clamp(12px, 3vw, 16px);
+        overflow-x: auto; /* Permite scroll horizontal si el autómata es muy largo en móvil */
     }}
 
     .footer {{
         background-color: #f1f1f1;
-        padding: 40px;
+        padding: 30px 15px;
         text-align: center;
         border-top: 1px solid #ddd;
-        margin-top: 80px;
+        margin-top: 50px;
+    }}
+
+    /* Media query para asegurar que columnas se apilen correctamente */
+    @media (max-width: 768px) {{
+        .titulo-grande {{ margin-top: 20px; }}
+        .section-top {{ padding-top: 20px; }}
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -136,14 +154,18 @@ st.markdown(f"""
 if img_base64:
     st.markdown(f"""
         <div style="background-color:{color_principal}; text-align: center; padding-bottom: 30px;">
-            <img src="data:image/png;base64,{img_base64}" width="650" class="img-transparente">
+            <div class="img-container">
+                <img src="data:image/png;base64,{img_base64}">
+            </div>
             <div class="decoracion-curva"></div>
         </div>
         """, unsafe_allow_html=True)
+else:
+    st.error("No se pudo cargar la imagen 'Karin.png'. Verifica que esté en la raíz de tu repositorio de GitHub.")
 
 # --- SECCIÓN 2: ANALIZADOR ---
 st.markdown('<div class="section-bottom">', unsafe_allow_html=True)
-f1, center_col, f2 = st.columns([1, 2, 1])
+col_espacio_izq, center_col, col_espacio_der = st.columns([0.2, 0.6, 0.2])
 
 with center_col:
     st.markdown("<h2 style='text-align: center; font-family: Forum, serif;'>Analizador Léxico y Sintáctico</h2>", unsafe_allow_html=True)
@@ -164,7 +186,6 @@ with center_col:
     tk = [map_cola[s_cola], map_orejas[s_orejas], map_ojos[s_ojos], map_cuerpo[s_cuerpo]]
 
     if st.button("ANALIZAR LENGUAJE FORMAL", use_container_width=True):
-        # Lógica de reconocimiento
         emocion = None
         if tk[0] == "C_UP" and tk[1] == "E_FWD" and tk[3] == "B_RELAX":
             emocion = "CURIOSIDAD"
@@ -175,7 +196,6 @@ with center_col:
         elif tk[0] == "C_UP" and tk[1] == "E_FWD" and tk[2] == "P_EXP" and tk[3] == "B_TENSE":
             emocion = "ALERTA"
 
-        # Mostrar resultado basado en si se reconoció la cadena
         if emocion:
             st.markdown(f'<p class="resultado-emocion">{emocion}</p>', unsafe_allow_html=True)
             st.markdown(f"""
@@ -184,7 +204,6 @@ with center_col:
             </div>
             """, unsafe_allow_html=True)
         else:
-            # Mensaje discreto cuando no se reconoce la postura
             st.markdown('<p class="resultado-error">POSTURA NO RECONOCIDA - Intente nuevamente</p>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
