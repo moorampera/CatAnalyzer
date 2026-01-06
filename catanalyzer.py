@@ -16,7 +16,7 @@ def get_base64_image(image_path):
         return None
 
 # Asegúrate de que el archivo se llame gato.png en tu carpeta de GitHub
-img_base64 = get_base64_image("gato.png")
+img_base64 = get_base64_image("karin.png")
 
 # 2. COLORES Y ESTILOS CSS
 color_principal = "#F9D0BC"
