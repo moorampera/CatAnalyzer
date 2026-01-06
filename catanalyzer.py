@@ -144,6 +144,7 @@ st.markdown(f"""
         <div class="descripcion-centrada">
             Esta herramienta interpreta las posturas y señales físicas del felino como cadenas de un lenguaje formal, 
             mediante autómatas finitos deterministas (AFD) y gramáticas libres de contexto.
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -166,7 +167,6 @@ col_espacio_izq, center_col, col_espacio_der = st.columns([0.1, 0.8, 0.1])
 with center_col:
     st.markdown("<h2 style='text-align: center; font-family: Forum, serif;'>Analizador Léxico y Sintáctico</h2>", unsafe_allow_html=True)
     
-    # Especificación Formal para la materia (Mezclado)
     with st.expander("Especificación Formal del Lenguaje"):
         st.markdown("""
         <div style="font-family: 'Courier New', monospace; font-size: 14px; background: #f9f9f9; padding: 10px; border-radius: 10px; border: 1px solid #ddd;">
@@ -205,7 +205,6 @@ with center_col:
 
         if emocion:
             st.markdown(f'<p class="resultado-emocion">{emocion}</p>', unsafe_allow_html=True)
-            # Traza de ejecución del autómata (Mezclado)
             st.markdown(f"""
             <div class="automata-box">
                 <small style="color: #333;">Función de Transición δ:</small><br>
