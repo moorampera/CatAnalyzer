@@ -215,14 +215,15 @@ with center_col:
                 <li><b>• C_LOW:</b> Cola Baja </li>
                 <li><b>• C_PUFF:</b> Cola Erizada </li>
                 <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ccc;">
-                <li><b>• E_FWD:</b> Orejas hacia adelante</li>
-                <li><b>• E_BWD:</b> Orejas hacia atrás / planas</li>
+                <li><b>• E_FWD:</b> Orejas hacia adelante </li>
+                <li><b>• E_BWD:</b> Orejas hacia atrás </li>
                 <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ccc;">
                 <li><b>• P_EXP:</b> Pupilas Dilatadas </li>
-                <li><b>• P_CON:</b> Pupilas Contraídas</li>
+                <li><b>• P_CON:</b> Pupilas Contraídas </li>
                 <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ccc;">
                 <li><b>• B_RELAX:</b> Cuerpo Relajado</li>
-                <li><b>• B_TENSE:</b> Cuerpo Tenso o Encorvado</li>
+                <li><b>• B_TENSE:</b> Cuerpo Tenso / Reacción</li>
+            </ul>
         </div>
         """, unsafe_allow_html=True)
 
@@ -245,23 +246,24 @@ with center_col:
         emocion = None
         explicacion = ""
         
-        # LÓGICA DE ACEPTACIÓN Y EXPLICACIONES
+        # --- ESTADOS DE ACEPTACIÓN ---
         if tk[0] == "C_UP" and tk[1] == "E_FWD" and tk[3] == "B_RELAX":
             emocion = "CURIOSIDAD"
-            explicacion = "La cola alta y orejas al frente indican interés positivo, apoyado por un cuerpo que no muestra tensión defensiva."
+            explicacion = "La cola erguida indica confianza y las orejas al frente atención plena; el cuerpo relajado confirma que el gato está explorando cómodamente."
         elif tk[0] == "C_LOW" and tk[1] == "E_FWD" and tk[2] == "P_CON" and tk[3] == "B_RELAX":
             emocion = "RELAJACIÓN"
-            explicacion = "Pupilas contraídas y cuerpo relajado son signos claros de un estado de calma y ausencia de amenazas."
+            explicacion = "Las pupilas contraídas y el cuerpo suelto indican una baja producción de cortisol; el gato se siente seguro en su entorno."
         elif tk[0] == "C_PUFF" and tk[1] == "E_BWD" and tk[3] == "B_TENSE":
             emocion = "MIEDO / AGRESIÓN"
-            explicacion = "La cola erizada y orejas planas son una respuesta defensiva clásica ante una amenaza inminente."
+            explicacion = "La cola erizada (piloerección) busca aumentar el tamaño visual para defensa, mientras las orejas atrás protegen los cartílagos ante una posible pelea."
         elif tk[0] == "C_UP" and tk[1] == "E_FWD" and tk[2] == "P_EXP" and tk[3] == "B_TENSE":
             emocion = "ALERTA"
-            explicacion = "Las pupilas dilatadas y la tensión corporal indican que el felino ha detectado algo que requiere su total atención."
+            explicacion = "Las pupilas dilatadas permiten mayor entrada de luz para procesar estímulos rápidos; el cuerpo tenso prepara al sistema musculoesquelético para la acción."
 
+        # --- MOSTRAR RESULTADO ---
         if emocion:
             st.markdown(f'<p class="resultado-emocion">{emocion}</p>', unsafe_allow_html=True)
-            st.markdown(f'<div class="explicacion-caja"><b>Interpretación:</b> {explicacion}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="explicacion-caja"><b>Análisis Semántico:</b> {explicacion}</div>', unsafe_allow_html=True)
             st.markdown(f"""
             <div class="automata-box">
                 <small style="color: #333;">Función de Transición δ:</small><br>
@@ -269,16 +271,22 @@ with center_col:
             </div>
             """, unsafe_allow_html=True)
         else:
-            # LÓGICA DE EXPLICACIÓN DE RECHAZO
-            if tk[3] == "B_TENSE" and tk[0] == "C_LOW":
-                motivo = "Un gato relajado (C_LOW) no suele presentar una musculatura tensa (B_TENSE); es una contradicción en el lenguaje corporal."
+            # --- LÓGICA DE RECHAZO DETALLADA POR COMBINACIÓN ---
+            if tk[0] == "C_PUFF" and tk[3] == "B_RELAX":
+                motivo = "Inconsistencia detectada: La cola erizada (C_PUFF) es una respuesta automática del sistema simpático que impide que los músculos estén relajados (B_RELAX)."
             elif tk[1] == "E_BWD" and tk[0] == "C_UP":
-                motivo = "Las orejas hacia atrás (miedo/enojo) son incompatibles con una cola alta y erguida (confianza) en este modelo."
+                motivo = "Conflicto de señales: Las orejas hacia atrás (miedo/rechazo) contradicen la cola alta, que es un signo social de saludo y confianza."
+            elif tk[0] == "C_LOW" and tk[3] == "B_TENSE" and tk[1] == "E_FWD":
+                motivo = "Postura ambigua: Un gato con orejas atentas y cola baja no suele presentar tensión muscular extrema a menos que haya dolor localizado, lo cual no es un estado emocional estándar."
+            elif tk[2] == "P_EXP" and tk[0] == "C_LOW" and tk[3] == "B_RELAX":
+                motivo = "Error de estímulo: Las pupilas dilatadas (midriasis) sugieren excitación o miedo, lo cual es incompatible con una cola baja y cuerpo totalmente relajado."
+            elif tk[0] == "C_PUFF" and tk[1] == "E_FWD":
+                motivo = "Combinación no reconocida: La cola erizada usualmente desplaza las orejas hacia atrás por instinto de protección; mantenerlas adelante es una cadena inválida."
             else:
-                motivo = "La combinación de señales no corresponde a ningún estado emocional definido en la gramática actual."
+                motivo = f"La cadena conformada por {tk[0]}, {tk[1]}, {tk[2]} y {tk[3]} demuestra señales emocionales contadictorias. La combinación refleja señales mixtas de miedo y relajación, lo que es biológicamente incoherente"
             
             st.markdown('<p class="resultado-error">CADENA RECHAZADA</p>', unsafe_allow_html=True)
-            st.markdown(f'<div class="explicacion-caja" style="border-left-color: #D32F2F;"><b>Motivo del rechazo:</b> {motivo}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="explicacion-caja" style="border-left-color: #D32F2F;"><b>Motivo biológico del rechazo:</b> {motivo}</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -287,7 +295,7 @@ st.markdown(f"""
     <div class="footer">
         <p><strong>Aviso Importante:</strong><br>
         Esta aplicación es una herramienta educativa basada en teoría de de computación y compiladores y no reemplaza 
-        en ningún caso el diagnóstico profesional de un médico veterinario.Si su gato presenta signos de malestar, dolor o cambios drásticos en su conducta, consulte a un veterinario de inmediato.</p>
+        en ningún caso el diagnóstico profesional de un médico veterinario.</p>
         <hr style="width: 50%; margin: 20px auto;">
         <p><b>Materia:</b> Teoría de Computación y Compiladores | <b>Secuencia:</b> 4CM41</p>
         <p style="font-size: 12px; color: #888;">UPIICSA - IPN | 2025</p>
