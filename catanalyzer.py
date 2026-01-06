@@ -111,10 +111,10 @@ st.markdown(f"""
     }}
 
     .automata-box {{
-        background-color: #CFE1EA !important;
+        background-color: #FFFF !important;
         padding: 15px;
         border-radius: 15px;
-        border: 2px dashed #333 !important;
+        border: 2px dashed #CFE1EA !important;
         font-family: 'Courier New', monospace;
         text-align: center;
         margin: 20px auto;
