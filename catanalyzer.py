@@ -29,10 +29,15 @@ st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Forum&family=Righteous&display=swap');
 
+    /* FORZAR COLORES EN MÓVIL (EVITAR MODO OSCURO) */
+    [data-testid="stAppViewContainer"], [data-testid="stHeader"], .main {{
+        background-color: white !important;
+    }}
+
     .block-container {{ padding: 0rem; }}
     
     .section-top {{
-        background-color: {color_principal};
+        background-color: {color_principal} !important;
         padding: 40px 10px 10px 10px;
         text-align: center;
         display: flex;
@@ -44,7 +49,7 @@ st.markdown(f"""
     .titulo-grande {{
         font-family: 'Righteous', cursive;
         font-size: clamp(40px, 10vw, 130px) !important;
-        color: #333;
+        color: #333 !important;
         margin-bottom: 10px;
         line-height: 1;
     }}
@@ -52,7 +57,7 @@ st.markdown(f"""
     .descripcion-centrada {{
         font-family: 'Forum', serif;
         font-size: clamp(16px, 4vw, 18px);
-        color: #444;
+        color: #444 !important;
         max-width: 500px;
         margin: 20px auto 0px auto;
         text-align: center;
@@ -61,7 +66,7 @@ st.markdown(f"""
     }}
 
     .decoracion-curva {{
-        background-color: #CFE1EA;
+        background-color: #CFE1EA !important;
         height: clamp(20px, 5vw, 45px);
         width: 90%;
         max-width: 1300px;
@@ -78,54 +83,58 @@ st.markdown(f"""
     }}
     
     .section-bottom {{
-        background-color: #FFFFFF;
+        background-color: #FFFFFF !important;
         padding: 40px 10px;
     }}
 
+    /* Selectores específicos para móvil */
     div[data-baseweb="select"] > div {{
         background-color: {color_complementario} !important;
         border-radius: 12px;
         border: 2px solid #a8d5eb !important;
+        color: black !important;
     }}
 
     .resultado-emocion {{
         font-size: clamp(35px, 8vw, 80px) !important;
         font-weight: bold;
-        color: #2E7D32;
+        color: #2E7D32 !important;
         text-align: center;
     }}
 
     .resultado-error {{
         font-family: 'Forum', serif;
         font-size: 22px !important;
-        color: #888;
+        color: #888 !important;
         text-align: center;
         margin-top: 20px;
     }}
 
     .automata-box {{
-        background-color: #CFE1EA;
+        background-color: #CFE1EA !important;
         padding: 15px;
         border-radius: 15px;
-        border: 2px dashed #333;
+        border: 2px dashed #333 !important;
         font-family: 'Courier New', monospace;
         text-align: center;
         margin: 20px auto;
         max-width: 90%;
+        color: #333 !important;
         font-size: clamp(12px, 3vw, 16px);
         overflow-x: auto;
     }}
 
     .footer {{
-        background-color: #f1f1f1;
+        background-color: #f1f1f1 !important;
         padding: 30px 15px;
         text-align: center;
         border-top: 1px solid #ddd;
         margin-top: 50px;
+        color: #444 !important;
     }}
 
     @media (max-width: 768px) {{
-        .section-bottom h2 {{ font-size: 24px !important; }}
+        .section-bottom h2 {{ font-size: 24px !important; color: black !important; }}
         [data-testid="column"] {{
             width: 100% !important;
             flex: 1 1 100% !important;
@@ -165,11 +174,11 @@ st.markdown('<div class="section-bottom">', unsafe_allow_html=True)
 col_espacio_izq, center_col, col_espacio_der = st.columns([0.1, 0.8, 0.1])
 
 with center_col:
-    st.markdown("<h2 style='text-align: center; font-family: Forum, serif;'>Analizador Léxico y Sintáctico</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; font-family: Forum, serif; color: black;'>Analizador Léxico y Sintáctico</h2>", unsafe_allow_html=True)
     
     with st.expander("Especificación Formal del Lenguaje"):
         st.markdown("""
-        <div style="font-family: 'Courier New', monospace; font-size: 14px; background: #f9f9f9; padding: 10px; border-radius: 10px; border: 1px solid #ddd;">
+        <div style="font-family: 'Courier New', monospace; font-size: 14px; background: #f9f9f9; padding: 10px; border-radius: 10px; border: 1px solid #ddd; color: black;">
             <b>Alfabeto (Σ):</b> {C_UP, C_LOW, C_PUFF, E_FWD, E_BWD, P_EXP, P_CON, B_RELAX, B_TENSE}<br>
             <b>Tokens:</b> &lt;COLA&gt; &lt;OREJAS&gt; &lt;OJOS&gt; &lt;CUERPO&gt;<br>
             <b>Definición:</b> M = {Q, Σ, δ, q₀, F}<br>
@@ -222,8 +231,7 @@ st.markdown(f"""
         <p><strong>Aviso Importante:</strong><br>
         Esta aplicación es una herramienta educativa basada en teoría de de computación y compiladores y no reemplaza 
         en ningún caso el diagnóstico profesional de un médico veterinario o especialista en 
-        comportamiento animal. Si su gato presenta signos de malestar, dolor o cambios drásticos 
-        en su conducta, consulte a un veterinario de inmediato.</p>
+        comportamiento animal.Si su gato presenta signos de malestar, dolor o cambios drásticos en su conducta, consulte a un veterinario de inmediato.</p>
         <hr style="width: 50%; margin: 20px auto;">
         <p><b>Materia:</b> Teoría de Computación y Compiladores | <b>Secuencia:</b> 4CM41</p>
         <p style="font-size: 12px; color: #888;">UPIICSA - IPN | 2025</p>
